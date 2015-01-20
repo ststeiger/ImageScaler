@@ -24,12 +24,11 @@ namespace ImageScaler
             }
 #endif
 
-
 			// args = new string[]{"--width", "200", "--Height", "250"
 			// 	, "--fitproportional", "fAlSe", "/quality", "25"};
 
 			ResizeParameters_t ResizeParameters = new ResizeParameters_t(args);
-			ImageSizer.ResizeImages (ResizeParameters);
+			ImageSizer.ResizeImages(ResizeParameters);
 
 			System.Console.WriteLine(System.Environment.NewLine);
 			System.Console.WriteLine(" -- Press any key to continue --- ");

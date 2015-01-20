@@ -16,6 +16,26 @@ namespace ImageScaler
         public string Suffix;
         public string WorkingDirectory;
 
+        public System.Drawing.Imaging.ImageFormat OutputFormat;
+
+
+        protected static System.Drawing.Imaging.ImageFormat GetImageFormat(string format)
+        {
+            System.Drawing.Imaging.ImageFormat imageFormat = null;
+
+            try
+            {
+                System.Drawing.ImageFormatConverter imageFormatConverter = new System.Drawing.ImageFormatConverter();
+                imageFormat = (System.Drawing.Imaging.ImageFormat)imageFormatConverter.ConvertFromString(format);
+            }
+            catch (System.Exception)
+            {
+                // throw;
+            }
+
+            return imageFormat;
+        }
+
 
         public void SetDefaults()
         {
@@ -26,7 +46,7 @@ namespace ImageScaler
                 this.Height = 600;
 
             if (!this.Quality.HasValue)
-                this.Quality = 50;
+                this.Quality = 100; // 50 
 
             if (!this.FitProportional.HasValue)
                 this.FitProportional = true;
@@ -43,6 +63,9 @@ namespace ImageScaler
                 this.WorkingDirectory = System.IO.Path.GetDirectoryName(this.WorkingDirectory);
             }
 
+            if (this.OutputFormat == null)
+                this.OutputFormat = System.Drawing.Imaging.ImageFormat.Png;
+            
         } // End Sub SetDefaults
 
 
@@ -66,6 +89,15 @@ namespace ImageScaler
                 this.Suffix = this.CommandLine["sufffix"];
 
                 this.WorkingDirectory = this.CommandLine["cwd"];
+
+                string strOutputFormat = this.CommandLine["OutputFormat"];
+
+                if (!string.IsNullOrEmpty(strOutputFormat))
+                {
+                    strOutputFormat = strOutputFormat.ToLowerInvariant().Replace("jpg", "jpeg");
+                    this.OutputFormat = GetImageFormat(strOutputFormat);
+                }
+                
             } // End if(pargs != null)
 
             SetDefaults();

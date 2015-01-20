@@ -20,18 +20,17 @@ namespace ImageScaler
             foreach (string strFileName in FileHelper.GetRasterImages(ResizeParameters.WorkingDirectory))
             {
                 string strNewFileName = System.IO.Path.GetFileNameWithoutExtension(strFileName);
-                string strNewExtension = System.IO.Path.GetExtension(strFileName);
-
-                strNewFileName = ResizeParameters.Prefix + strNewFileName + ResizeParameters.Suffix + strNewExtension;
+                
+                strNewFileName = ResizeParameters.Prefix + strNewFileName + ResizeParameters.Suffix;
                 strNewFileName = System.IO.Path.Combine(ResizeParameters.WorkingDirectory, strNewFileName);
 
-                ResizeImage(strFileName, strNewFileName, ResizeParameters);
+                ResizeImage(strFileName, strNewFileName, ResizeParameters, ResizeParameters.OutputFormat);
             } // Next strFileName 
 
         } // End Sub ResizeImages 
 
 
-        public static void ResizeImage(string fileName, string saveAsFileName, ResizeParameters_t ResizeParameters)
+        public static void ResizeImage(string fileName, string saveAsFileName, ResizeParameters_t ResizeParameters, System.Drawing.Imaging.ImageFormat outputFormat)
         {
             ResizeImage(
                  fileName
@@ -39,12 +38,13 @@ namespace ImageScaler
                 , ResizeParameters.Width.Value
                 , ResizeParameters.Height.Value
                 , ResizeParameters.Quality.Value
+                , outputFormat
                 );
         } // End Sub ResizeImage
 
 
         public static void ResizeImage(string fileName, string filePath
-                        , int maxWidth, int maxHeight, int quality)
+                        , int maxWidth, int maxHeight, int quality, System.Drawing.Imaging.ImageFormat outputFormat)
         {
 
             using (System.Drawing.Image img = System.Drawing.Image.FromFile(fileName))
@@ -55,6 +55,7 @@ namespace ImageScaler
                     , maxWidth
                     , maxHeight
                     , quality
+                    , outputFormat
                     );
 
             } // End Using img
@@ -71,7 +72,7 @@ namespace ImageScaler
         /// <param name="maxHeight">resize height.</param>
         /// <param name="quality">quality setting value [max compressed 0 ... 100 max-quality].</param>
         public static void ResizeImage(System.Drawing.Image image, string filePath
-                         , int maxWidth, int maxHeight, int quality)
+                         , int maxWidth, int maxHeight, int quality, System.Drawing.Imaging.ImageFormat outputFormat)
         {
             // Get the image's original width and height
             int originalWidth = image.Width;
@@ -86,9 +87,12 @@ namespace ImageScaler
             int newWidth = (int)(originalWidth * ratio);
             int newHeight = (int)(originalHeight * ratio);
 
+            
+            filePath += "." + outputFormat.ToString().ToLowerInvariant().Replace("jpeg", "jpg");
+
+
             // Get an ImageCodecInfo object that represents the JPEG codec.
-            System.Drawing.Imaging.ImageCodecInfo imageCodecInfo = GetEncoderInfo(
-                System.Drawing.Imaging.ImageFormat.Jpeg);
+            System.Drawing.Imaging.ImageCodecInfo imageCodecInfo = GetEncoderInfo(outputFormat);
 
             // Create an Encoder object for the Quality parameter.
             System.Drawing.Imaging.Encoder encoder = System.Drawing.Imaging.Encoder.Quality;
