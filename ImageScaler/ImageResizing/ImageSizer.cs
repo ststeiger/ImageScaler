@@ -16,16 +16,14 @@ namespace ImageScaler
         // ImageSizer.ResizeImages(ResizeParameters);
         public static void ResizeImages(ResizeParameters_t ResizeParameters)
         {
-            string strExecutionDir = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            strExecutionDir = System.IO.Path.GetDirectoryName(strExecutionDir);
 
-            foreach (string strFileName in FileHelper.GetRasterImages(strExecutionDir))
+            foreach (string strFileName in FileHelper.GetRasterImages(ResizeParameters.WorkingDirectory))
             {
                 string strNewFileName = System.IO.Path.GetFileNameWithoutExtension(strFileName);
                 string strNewExtension = System.IO.Path.GetExtension(strFileName);
 
                 strNewFileName = ResizeParameters.Prefix + strNewFileName + ResizeParameters.Suffix + strNewExtension;
-                strNewFileName = System.IO.Path.Combine(strExecutionDir, strNewFileName);
+                strNewFileName = System.IO.Path.Combine(ResizeParameters.WorkingDirectory, strNewFileName);
 
                 ResizeImage(strFileName, strNewFileName, ResizeParameters);
             } // Next strFileName 
