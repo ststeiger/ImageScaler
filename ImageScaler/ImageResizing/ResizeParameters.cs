@@ -40,10 +40,10 @@ namespace ImageScaler
         public void SetDefaults()
         {
             if (!this.Width.HasValue)
-                this.Width = 600;
+                this.Width = 1000;
 
             if (!this.Height.HasValue)
-                this.Height = 600;
+                this.Height =(int)( this.Width.Value * 0.70966819221967963386727688787185);
 
             if (!this.Quality.HasValue)
                 this.Quality = 100; // 50 

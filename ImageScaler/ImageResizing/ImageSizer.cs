@@ -99,7 +99,9 @@ namespace ImageScaler
 
             // Convert other formats (including CMYK) to RGB.
             using (System.Drawing.Bitmap newImage = new System.Drawing.Bitmap(newWidth, newHeight,
-                System.Drawing.Imaging.PixelFormat.Format24bppRgb))
+                // System.Drawing.Imaging.PixelFormat.Format24bppRgb // OMG bug
+                    System.Drawing.Imaging.PixelFormat.Format32bppArgb 
+                ))
             {
 
                 // Draws the image in the specified size with quality mode set to HighQuality
@@ -108,6 +110,8 @@ namespace ImageScaler
                     graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
                     graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                     graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                    graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                    graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
                     graphics.DrawImage(image, 0, 0, newWidth, newHeight);
                 } // End Using Graphics graphics
 
